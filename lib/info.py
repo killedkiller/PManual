@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import pygtk
 import sys
+# from io import StringIO,BytesIO
 
 pygtk.require('2.0')
 import gtk
@@ -45,6 +46,7 @@ class SimpleTextInput:
 
 
 if __name__ == "__main__":
-    sys.stdout.write(argv[0]+"222\n")
+    for line in sys.stdin:
+        sys.stdout.write(line)
     txt = SimpleTextInput()
     txt.main()
