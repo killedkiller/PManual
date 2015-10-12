@@ -20,6 +20,8 @@ class PManualCommand(sublime_plugin.TextCommand):
         for region in sel:
                 if region.size()!= 0:
                     word    =   self.view.substr(region)
+                else:
+                    return
         word=word.encode(encoding="utf-8")
 
         if sublime.platform() == 'linux':

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import pygtk
 import sys
+import re
+import urllib
 # from io import StringIO,BytesIO
 
 pygtk.require('2.0')
@@ -44,9 +46,66 @@ class SimpleTextInput:
     def main(self):
         gtk.main()
 
+def getHtml(url):
+    page = urllib.urlopen(url)
+    html = page.read()
+    return html
+
+
+def getMain(html):
+    #reg = r'src="(.+?\.jpg)" pic_ext'
+    
+    reg     =   r'<h1 class="refname">(.*)<\/h1>'
+
+    rege = re.compile(reg)
+    result = re.findall(rege,html)
+    for title in result:
+        if title!=None:
+            return title
+        else:
+            return 'error'
+
+    
+    # for imgurl in imglist:
+    #     sys.stdout.write(imgurl,'%s.jpg' % x)
+    
+    #return imglist   
+
+def notfound(html):
+    reg     =   r'<h1>(.*)<\/h1>'
+
+    rege = re.compile(reg)
+    result = re.findall(rege,html)
+    for con in result:
+        if con=='Not Found':
+            sys.stdout.write('not found')
+            return 1
+        else:
+            return 0
+
+
 
 if __name__ == "__main__":
     for line in sys.stdin:
-        sys.stdout.write(line)
+        #sys.stdout.write(line)
+        str     =   line.strip()
+    #sys.stdout.write(str)
+    url     =      'http://php.net/manual/zh/function.'+str+'.php'
+    
+    html    =   getHtml(url)
+    ifNotFound  =notfound(html)
+    if(ifNotFound):
+        sys.stdout.write('stop')
+        exit()
+    else:
+        title=getMain(html)
+    if title!='error':
+        sys.stdout.write(title)
+    else:
+        exit()
+    #sys.stdout.write(html)
+    #echo 
+
     txt = SimpleTextInput()
+    
     txt.main()
