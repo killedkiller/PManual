@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#encoding:utf-8
 import pygtk
 import sys
 import re
@@ -55,7 +56,8 @@ def getHtml(url):
 def getMain(html):
     #reg = r'src="(.+?\.jpg)" pic_ext'
     
-    reg     =   r'<h1 class="refname">(.*)<\/h1>'
+    #reg     =   r'<h1 class="refname">(.*)<\/h1>'
+    reg     =   r'<span class="refname">.*</span> &mdash; <span class="dc-title">(.*)</span>'
 
     rege = re.compile(reg)
     result = re.findall(rege,html)
@@ -64,6 +66,21 @@ def getMain(html):
             return title
         else:
             return 'error'
+def getDescripiton(html):
+    #reg = r'src="(.+?\.jpg)" pic_ext'
+    
+    #reg     =   r'<h1 class="refname">(.*)<\/h1>'
+    reg     =   r'<div class="methodsynopsis dc-description">\n   <span class="type">(.*)</span> <span class="methodname"><strong>(.*)</strong></span>\n    \(([\s\S]*)\)'
+    sys.stdout.write('sssss')
+    rege = re.compile(reg)
+    result = re.findall(rege,html)
+    for description in result:
+        if description!=None:
+            for xx in description:
+              print(xx)
+            
+        else:
+            sys.stdout.write('error')
 
     
     # for imgurl in imglist:
@@ -82,6 +99,19 @@ def notfound(html):
             return 1
         else:
             return 0
+
+
+ #  <div class="methodsynopsis dc-description">
+ #   <span class="type">int</span> <span class="methodname"><strong>print</strong></span>
+ #    ( <span class="methodparam"><span class="type">string</span> <code class="parameter">$arg</code></span>
+ #   )</div>
+
+ #  <p class="para rdfs-comment">
+
+ #  </p>
+ #  <p class="para">
+
+ # </div>
 
 
 
@@ -103,6 +133,7 @@ if __name__ == "__main__":
         sys.stdout.write(title)
     else:
         exit()
+    getDescripiton(html)
     #sys.stdout.write(html)
     #echo 
 
