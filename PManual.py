@@ -36,8 +36,10 @@ class PManualCommand(sublime_plugin.TextCommand):
             from subprocess import Popen, PIPE, STDOUT
 
             p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
-            grep_stdout = p.communicate(input=word)[0]
-            print(grep_stdout.decode())
+
+            p.communicate(input=word)[0]
+            #print(grep_stdout.decode())
+            #print('xxx')
 
             # pipe = os.popen(args, 'w', bufsize)
   

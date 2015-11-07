@@ -4,12 +4,13 @@ import pygtk
 import sys
 import re
 import urllib
+
 # from io import StringIO,BytesIO
 
 pygtk.require('2.0')
 import gtk
 
-class SimpleTextInput:
+class Manual:
     def print_text(self):
         buffer = self.textInput.get_buffer()
 
@@ -20,30 +21,49 @@ class SimpleTextInput:
         gtk.main_quit()
 
     def __init__(self,title,param):
-        # create a new window
+
+        #create a new window
         self.print_text_flag = False
         window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+
         window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         window.set_title("PHP Manual")
-        window.set_default_size(300, 360)
-        window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+        window.set_default_size(300, 200)
+        #window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         window.connect("destroy", self.destroy)
         window.set_border_width(5)
 
-        # self.textInput = gtk.Entry()
-        # self.textInput.set_text(title)
-        # #echo
-        # self.textInput.set_max_length(20)
-      
-        #self.textInput.connect("key_press_event", self.on_key_press)
-        # window.add(self.textInput)
+        grid    =   gtk.Table(3,1,True)
+        window.add(grid)
 
-        self.text = gtk.Entry()
-        self.text.set_text(param)
-        self.text.connect("key_press_event", self.on_key_press)
+        label   =   gtk.Label()
+        label.set_text(title)
+        
+        grid.attach(label,0,1,0,1)
+
+        self.textInput = gtk.Entry()
+        self.textInput.set_text(param)
         #echo
-        self.text.set_max_length(50)
-        window.add(self.text)
+        self.textInput.set_max_length(50)
+      
+        self.textInput.connect("key_press_event", self.on_key_press)
+        grid.attach(self.textInput,0,1,1,2)
+
+        comment =gtk.Label()
+        comment.set_text('注:"[]"为可选参数')
+        #comment.set_max_length(30)
+        #echo
+
+        grid.attach(comment,0,1,2,3)
+
+        #window.add(self.textInput)
+
+        # self.text = gtk.Entry()
+        # self.text.set_text(param)
+        # self.text.connect("key_press_event", self.on_key_press)
+        # #echo
+        # self.text.set_max_length(50)
+        # window.add(self.text)
 
 
         window.show_all()
@@ -115,29 +135,31 @@ def getDescripiton(html):
                     rege = re.compile(musreg)
                     result = rege.search(xx)
                     if result:
-                        musp    =   result.group(0)
-                        
-                        
+                        musp    =   result.group(0)              
+                    else:
+                        musp   =    xx          
                         #echo
-
-
+                        #strpos
+                    if 1==1:
                    ##得到必须参数
-                    reg1    =   r'(?:<span class="methodparam"><span class="type">(.*)</span> <code class="parameter">(.*)</code></span>\n)*'
-                    rege = re.compile(reg1)
-                    result = re.findall(rege,musp)
+                        reg1    =   r'(?:<span class="methodparam"><span class="type">(.*)</span> <code class="parameter">(.*)</code></span>\n)*'
+                        rege = re.compile(reg1)
+                        result = re.findall(rege,musp)
 
-                    
-                    for value in result:
-                        #count1+=1;
-                       
                         
-                        if value!=None:
-                            param.append(value[0])
-                            param.append(value[1])
+                        for value in result:
+                            #count1+=1;
+                           
+                            
+                            if value!=None:
+                                param.append(value[0])
+                                param.append(value[1])
                             # sys.stdout.write(value[0]);
                             # sys.stdout.write(value[1])
+                
 
                     ##得到可选参数
+                    param.append('line')
                     nomusreg    =   r'\[.*\n  \]'
                     
                     rege = re.compile(nomusreg)
@@ -150,17 +172,17 @@ def getDescripiton(html):
 
 
                    ##得到必须参数
-                    reg1    =   r'(?:<span class="methodparam"><span class="type">(.*)</span> <code class="parameter">(.*)</code></span>\n)*'
-                    rege = re.compile(reg1)
-                    result = re.findall(rege,nomusp)
-                    param.append('line')
-                    for value in result:
-                        #count1+=1;
-                       
+                        reg1    =   r'(?:<span class="methodparam"><span class="type">(.*)</span> <code class="parameter">(.*)</code>.*</span>\n)*'
+                        rege = re.compile(reg1)
+                        result = re.findall(rege,nomusp)
                         
-                        if value!=None:
-                            param.append(value[0])
-                            param.append(value[1])
+                        for value in result:
+                            #count1+=1;
+                           
+                            
+                            if value!=None:
+                                param.append(value[0])
+                                param.append(value[1])
 
             return param
                            
@@ -240,7 +262,7 @@ if __name__ == "__main__":
             count-=1
         elif count==0:
 
-            string += 'void  ('
+            string += 'void  '+str +'( '
 
         elif count%2==0:
             # print(num2)
@@ -257,6 +279,6 @@ if __name__ == "__main__":
     # sys.stdout.write(string)
 
 
-    txt = SimpleTextInput(title,string)
+    txt = Manual(title,string)
     
     txt.main()
